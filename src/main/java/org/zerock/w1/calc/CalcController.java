@@ -1,5 +1,7 @@
 package org.zerock.w1.calc;
 
+import org.zerock.w1.calc.dto.CalcDTO;
+import org.zerock.w1.calc.service.CalcService;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,12 +14,15 @@ public class CalcController extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String num1 = req.getParameter("num1");
-        String num2 = req.getParameter("num2");
+        System.out.println("FROM CALCCONTROLLER");
+        CalcDTO userInput = new CalcDTO();
+        userInput.setNum1(Integer.parseInt(req.getParameter("num1")));
+        userInput.setNum2(Integer.parseInt(req.getParameter("num2")));
 
-        System.out.println(num1);
-        System.out.println(num2);
+        CalcDTO calculated = CalcService.INSTANCE.calculate(userInput);
 
-        resp.sendRedirect("/index");
+        req.setAttribute("dto", calculated);
+
+        req.getRequestDispatcher("/WEB-INF/calc/result.jsp").forward(req, resp);
     }
 }
